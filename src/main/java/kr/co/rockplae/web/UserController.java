@@ -19,9 +19,19 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@GetMapping("/login")
+	public String login() {
+		return "/user/login";
+	}
+	
 	@GetMapping("/form")
 	public String form() {
 		return "/user/form";
+	}
+	
+	@GetMapping("/profile")
+	public String profile() {
+		return "/user/profile";
 	}
 
 	@PostMapping("")
