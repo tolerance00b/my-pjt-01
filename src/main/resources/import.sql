@@ -1,0 +1,2 @@
+INSERT INTO USER (UID, PASSWORD, NAME, EMAIL) VALUES ('mjkim', '12345', '김민재', 'mjkim@rockplace.co.kr');
+INSERT INTO USER (UID, PASSWORD, NAME, EMAIL) VALUES ('tolerance00', '54321', '김민재2', 'tolerance00@rockplace.co.kr');

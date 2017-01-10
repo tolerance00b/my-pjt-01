@@ -22,6 +22,10 @@ public class User {
 
 	private String email;
 
+	public long getId() {
+		return id;
+	}
+
 	public String getUserId() {
 		return userId;
 	}
@@ -36,6 +40,22 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean confirmId(Long newId) {
+		if (newId == null) {
+			return false;
+		}
+		
+		return newId.equals(id);
+	}
+
+	public boolean confirmPassword(String newPassword) {
+		if (newPassword == null) {
+			return false;
+		}
+
+		return newPassword.equals(password);
 	}
 
 	public String getName() {
@@ -55,7 +75,9 @@ public class User {
 	}
 
 	public void update(User updateUser) {
-		this.password = updateUser.password;
+		if (!confirmPassword(updateUser.getPassword())) {
+			throw new IllegalStateException("비밀번호 틀림");
+		}
 		this.name = updateUser.name;
 		this.email = updateUser.email;
 	}
