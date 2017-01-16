@@ -28,15 +28,30 @@ public class Question {
 
 	private LocalDateTime createDate;
 
+	@OneToMany(mappedBy = "question")
+	public List<Answer> answers;
+
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_delete_user"))
+	private User deleteUser;
+
+	private LocalDateTime deleteDate;
+
+	private Integer deleteFlag;
+
 	public Question() {
 	}
 
-	public Question(User writer, String title, String contents) {
+	public Question(User writer, String title, String contents, User deleteUser, Integer deleteFlag,
+			List<Answer> answers) {
 		super();
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
 		this.createDate = LocalDateTime.now();
+		this.deleteUser = deleteUser;
+		this.deleteFlag = deleteFlag;
+		this.answers = answers;
 	}
 
 	public String getFormattedCreateDate() {
@@ -45,17 +60,6 @@ public class Question {
 		}
 		return createDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd.HH:mm:ss"));
 	}
-
-	@OneToMany(mappedBy = "question")
-	public List<Answer> answers;
-
-//	@ManyToOne
-//	@JoinColumn(foreignKey=@ForeignKey(name="fk_question_delete_user"))
-//	private Long deleteUser;
-	
-	private LocalDateTime deleteDate;
-
-	private Integer deleteFlag;
 
 	@Override
 	public String toString() {
@@ -68,18 +72,14 @@ public class Question {
 		this.contents = contents;
 	}
 
-	public boolean isEqualWriter(Long user) {
-		if (user == null) {
-			return false;
-		}
-		return this.writer.equals(user);
+	public boolean isEqualWriter(User user) {
+		return this.writer.confirmId(user);
 	}
 
 	public boolean isEmptyAnswer() {
-		return this.answers.isEmpty();
+		return this.answers.size() == 0;
 	}
 
-	//
 	public boolean isEqualAnswerWriter() {
 		for (Answer answer : answers) {
 			if (!answer.isEqualWriter(this.writer)) {
@@ -89,19 +89,17 @@ public class Question {
 		return true;
 	}
 	
-	public boolean delete(Long user) {
-		if(!isEqualWriter(user)) {
+	public boolean delete(User user) {
+		if (!isEqualWriter(user)) {
 			return false;
 		}
-		
-		if(!isEmptyAnswer()) {
+		if (!isEmptyAnswer()) {
 			return isEqualAnswerWriter();
 		}
-		
-//		this.deleteUser = user;
+		this.deleteUser = user;
 		this.deleteDate = LocalDateTime.now();
 		this.deleteFlag = 1;
-		
+
 		return true;
 	}
 

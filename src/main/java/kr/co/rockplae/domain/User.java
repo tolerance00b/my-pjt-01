@@ -22,6 +22,18 @@ public class User {
 
 	private String email;
 
+	public User() {
+	}
+	
+	public User(Long id, String userId, String password, String name, String email) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.password = password;
+		this.name = name;
+		this.email = email;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -46,8 +58,8 @@ public class User {
 		if (user == null) {
 			return false;
 		}
-		
-		return user.equals(id);
+
+		return this.userId == user.userId;
 	}
 
 	public boolean confirmPassword(String newPassword) {

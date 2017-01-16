@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.rockplae.domain.Question;
 import kr.co.rockplae.domain.QuestionRepository;
+import kr.co.rockplae.domain.User;
 
 @Service
 public class QuestionService {
@@ -19,10 +20,12 @@ public class QuestionService {
 		return questionRepository.findOne(seq);
 	}
 
-	public void questionDelete(Long seq, Long user) {
+	public void questionDelete(Long seq, User user) {
 		Question question = questionFindBySeq(seq);
-		question.delete(user);
-		questionRepository.save(question);
+		if(question.isEqualWriter(user)) {
+			question.delete(user);
+			questionRepository.save(question);
+		};
 	}
 	
 }

@@ -30,6 +30,7 @@ public class AnswerController {
 		Question question = questionRepository.findOne(seq);
 		Answer answer = new Answer(loginUser, question, contents);
 		answerRepository.save(answer);
+		
 		return "redirect:/questions/" + seq + "/show";
 	}
 	

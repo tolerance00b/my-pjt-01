@@ -32,17 +32,14 @@ public class UserController {
 	public String loginProc(String userId, String password, HttpSession session) {
 //		User user = userRepository.findByUserId(userId);
 		User user = userService.userfindByUserId(userId);
-
 		if (user == null) {
 			System.out.println("아이디 없음");
 			return "redirect:/users/login_failed";
 		}
-
 		if (!user.confirmPassword(password)) {
 			System.out.println("비밀번호 틀림");
 			return "redirect:/users/login_failed";
 		}
-
 		System.out.println("로그인 성공!");
 		session.setAttribute("sessionUser", user);
 
@@ -91,7 +88,6 @@ public class UserController {
 		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/login";
 		}
-
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		User user = userService.userFindById(loginUser.getId());
 		model.addAttribute("user", user);
@@ -104,10 +100,8 @@ public class UserController {
 		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/login";
 		}
-
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
 		User user = userService.userFindById(sessionUser.getId());
-
 		user.update(updateUser);
 		userService.userCreate(user);
 		

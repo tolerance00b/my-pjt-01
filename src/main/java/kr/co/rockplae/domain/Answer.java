@@ -28,6 +28,14 @@ public class Answer {
 
 	private LocalDateTime createDate;
 
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_delete_user"))
+	private User deleteUser;
+
+	private LocalDateTime deleteDate;
+
+	private Integer deleteFlag;
+
 	public String getFormattedCreateDate() {
 		if (createDate == null) {
 			return "";
@@ -51,8 +59,8 @@ public class Answer {
 		return "Answer [seq=" + seq + ", writer=" + writer + ", question=" + question + ", contents=" + contents
 				+ ", createDate=" + createDate + "]";
 	}
-	
+
 	public boolean isEqualWriter(User user) {
-		return this.writer.equals(user);
+		return this.writer.confirmId(user);
 	}
 }

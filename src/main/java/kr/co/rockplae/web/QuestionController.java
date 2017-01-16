@@ -21,8 +21,8 @@ import kr.co.rockplae.utils.HttpSessionUtils;
 @RequestMapping("/questions")
 public class QuestionController {
 	@Autowired
-	private QuestionService questionService ;
-	
+	private QuestionService questionService;
+
 	@GetMapping("/form")
 	public String questionForm(HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
@@ -36,9 +36,8 @@ public class QuestionController {
 		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/login";
 		}
-
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
-		Question newQuestion = new Question(sessionUser, title, contents);
+		Question newQuestion = new Question(sessionUser, title, contents, null, null, null);
 		questionService.questionCreate(newQuestion);
 
 		return "redirect:/";
@@ -67,14 +66,14 @@ public class QuestionController {
 	}
 
 	@DeleteMapping("/{seq}")
-	public String questionDelete(@PathVariable Long seq, HttpSession session, Question question) throws Exception {
+	public String questionDelete(@PathVariable Long seq, HttpSession session, Question question) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/login";
 		}
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
-		questionService.questionDelete(seq, sessionUser.getId());
-		
+		questionService.questionDelete(seq, sessionUser);
+
 		return "redirect:/";
 	}
-	
+
 }
