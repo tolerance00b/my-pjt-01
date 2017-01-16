@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import kr.co.rockplae.domain.User;
 import kr.co.rockplae.domain.UserRepository;
+import kr.co.rockplae.service.UserService;
+import kr.co.rockplae.utils.HttpSessionUtils;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@GetMapping("/login")
 	public String login() {
@@ -28,7 +30,8 @@ public class UserController {
 
 	@PostMapping("/loginProc")
 	public String loginProc(String userId, String password, HttpSession session) {
-		User user = userRepository.findByUserId(userId);
+//		User user = userRepository.findByUserId(userId);
+		User user = userService.userfindByUserId(userId);
 
 		if (user == null) {
 			System.out.println("아이디 없음");
@@ -41,7 +44,7 @@ public class UserController {
 		}
 
 		System.out.println("로그인 성공!");
-		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
+		session.setAttribute("sessionUser", user);
 
 		return "redirect:/";
 	}
@@ -53,7 +56,7 @@ public class UserController {
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
-		session.removeAttribute("sessionUser");
+		session.invalidate();
 		return "redirect:/";
 	}
 
@@ -70,13 +73,15 @@ public class UserController {
 	@PostMapping("")
 	public String create(User user) {
 		System.out.println("User : " + user);
-		userRepository.save(user);
+//		userRepository.save(user);
+		userService.userCreate(user);
+		
 		return "redirect:/users";
 	}
 
 	@GetMapping("")
 	public String list(Model model) {
-		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("users",userService.userFindAll());
 		
 		return "user/list";
 	}
@@ -84,11 +89,11 @@ public class UserController {
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "redirect:/users/login_form";
+			return "redirect:/users/login";
 		}
 
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
-		User user = userRepository.findOne(loginUser.getId());
+		User user = userService.userFindById(loginUser.getId());
 		model.addAttribute("user", user);
 		
 		return "/user/updateForm";
@@ -97,14 +102,14 @@ public class UserController {
 	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, String password, User updateUser, HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "redirect:/users/login_form";
+			return "redirect:/users/login";
 		}
 
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
-		User user = userRepository.findOne(loginUser.getId());
+		User sessionUser = HttpSessionUtils.getUserFromSession(session);
+		User user = userService.userFindById(sessionUser.getId());
 
 		user.update(updateUser);
-		userRepository.save(user);
+		userService.userCreate(user);
 		
 		return "redirect:/users";
 	}

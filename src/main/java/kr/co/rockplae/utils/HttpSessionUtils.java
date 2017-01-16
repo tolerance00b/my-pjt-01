@@ -1,4 +1,4 @@
-package kr.co.rockplae.web;
+package kr.co.rockplae.utils;
 
 import javax.servlet.http.HttpSession;
 

@@ -42,12 +42,12 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean confirmId(Long newId) {
-		if (newId == null) {
+	public boolean confirmId(User user) {
+		if (user == null) {
 			return false;
 		}
 		
-		return newId.equals(id);
+		return user.equals(id);
 	}
 
 	public boolean confirmPassword(String newPassword) {
